@@ -1,24 +1,26 @@
-# README
+## 概要
+- チャットアプリ
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Version
+- ruby 2.7.2
+- rails 6.0.3.4
+- MySQL 5.7.22
 
-Things you may want to cover:
+### アプリ初期設定
+```
+$ make init
+```
 
-* Ruby version
+## 起動・停止
+### 起動コマンド
+```
+$ make up
+```
 
-* System dependencies
+### 停止コマンド
+```
+$ make down
+```
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## 確認
+http://localhost:3000/
