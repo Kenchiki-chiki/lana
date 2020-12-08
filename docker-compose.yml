@@ -11,12 +11,13 @@ services:
       - ./mysqlconf:/etc/mysql/conf.d
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec foreman start"
     volumes:
       - .:/lana
       - bundle:/bundle
     ports:
       - "3000:3000"
+      - "3035:3035"
     links:
       - db
     environment:
