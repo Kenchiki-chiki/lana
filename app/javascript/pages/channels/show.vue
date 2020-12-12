@@ -4,7 +4,6 @@
         app
         clipped
     >
-      <profile/>
       <v-list>
         <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
           <a :href="`/channels/${list_channel.id}`">
@@ -30,6 +29,7 @@
     </v-navigation-drawer>
     <v-main>
       <v-container>
+        <profile/>
         <h2>{{ channel.name }}</h2>
         <v-icon
             large

@@ -1,7 +1,7 @@
 <template>
-    <v-app class="account_icon">
+    <div class="account_icon">
       <v-icon @click="drawer = true" color="indigo">
-      mdi-account-circle
+        mdi-account-circle
       </v-icon>
       <v-menu
         v-model="drawer"
@@ -21,15 +21,10 @@
               </v-list-item-title>
             </v-list-item>
           </v-list-item-group>
-          
         </v-list>
       </v-menu>
-    </v-app>
-    
+    </div>
 </template>
-
-
-
 
 <script>
 import axios from 'axios';
@@ -40,27 +35,15 @@ export default {
     }
   },
   methods: {
-    logout() {
-      console.log('====1====')
-    
-    this.$router.push({ path: 'http://localhost:3000/users/sign_out' }),
-    this.$router.push({ path: 'http://localhost:3000/users/sign_up' })
-  },
-  
-  
+    async logout() {
+      const res = await axios.delete('/users/sign_out')
+      if (res.status == 204) {
+        location.reload()
+        alert('ログアウトしました')
+      } else {
+        alert('ログアウトに失敗しました')
+      }
+    }
   }
 }
 </script>
-
-
-
-
-<style>
-  .account_icon {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-}
-
-
-</style>
