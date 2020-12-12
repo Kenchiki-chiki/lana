@@ -81,6 +81,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise-i18n (1.9.2)
+      devise (>= 4.7.1)
     erubi (1.10.0)
     ffi (1.13.1)
     foreman (0.87.2)
@@ -213,6 +215,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   devise
+  devise-i18n
   foreman
   jbuilder (~> 2.7)
   listen (~> 3.2)
