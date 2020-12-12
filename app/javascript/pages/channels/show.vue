@@ -1,34 +1,72 @@
 <template>
   <v-app id="app">
-    <profile/>
-    <div class="sidebar">
-      <h2>チャンネル詳細</h2>
-      <v-navigation-drawer>
-        <v-list>
-          <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
-            <a :href="`/channels/${list_channel.id}`">
-              <v-list-item>
-                <v-list-item-title>
-                  {{ list_channel.name }}
-                </v-list-item-title>
-              </v-list-item>
-            </a>
-          </v-list-item-group>
-        </v-list>
-        <v-btn
-            class="mx-2"
-            fab
-            dark
-            color="indigo"
-            @click="openModal"
+    <v-navigation-drawer
+        app
+        clipped
+    >
+      <profile/>
+      <v-list>
+        <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
+          <a :href="`/channels/${list_channel.id}`">
+            <v-list-item>
+              <v-list-item-title>
+                {{ list_channel.name }}
+              </v-list-item-title>
+            </v-list-item>
+          </a>
+        </v-list-item-group>
+      </v-list>
+      <v-btn
+          class="mx-2"
+          fab
+          dark
+          color="indigo"
+          @click="openModal"
+      >
+        <v-icon dark>
+          mdi-plus
+        </v-icon>
+      </v-btn>
+    </v-navigation-drawer>
+    <v-main>
+      <v-container>
+        <h2>{{ channel.name }}</h2>
+        <v-icon
+            large
+            color="blue darken-2"
+            @click="toggleOpen"
         >
-          <v-icon dark>
-            mdi-plus
-          </v-icon>
-        </v-btn>
-      </v-navigation-drawer>
-    </div>
-    
+          mdi-account-multiple-plus-outline
+        </v-icon>
+        <ul>
+          <li
+              v-for="message in messages"
+              :key="message.id"
+          >
+            {{ message.user_name }}：{{ message.content }}
+          </li>
+        </ul>
+        <v-form>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                    v-model="content"
+                    :append-outer-icon="content ? 'mdi-send' : 'mdi-microphone'"
+                    filled
+                    clear-icon="mdi-close-circle"
+                    clearable
+                    label="Message"
+                    type="text"
+                    @click:append-outer="sendMessage"
+                    @click:clear="clearMessage"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </v-container>
+    </v-main>
     <v-dialog
         v-model="dialog"
         persistent
@@ -76,21 +114,34 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <SearchUserFormModal
+        v-if="open"
+        :open="open"
+        :channel="channel"
+        :toggle-open="toggleOpen"
+        @onHide="toggleOpen"
+    />
   </v-app>
 </template>
 
 <script>
 import axios from 'axios'
+import SearchUserFormModal from '@/components/user/SearchUserFormModal'
 import Profile from '@/components/profile_icon.vue'
+
 export default {
   components: {
+    SearchUserFormModal,
     Profile
   },
   data() {
     return {
       dialog: false,
       channelName: null,
-      errors: []
+      content: null,
+      errors: [],
+      messageErrors: [],
+      open: false
     }
   },
   props: {
@@ -99,9 +150,15 @@ export default {
     },
     channel: {
       type: Object
+    },
+    messages: {
+      type: Array
     }
   },
   methods: {
+    toggleOpen() {
+      this.open = !this.open
+    },
     openModal() {
       this.dialog = true
     },
@@ -109,13 +166,25 @@ export default {
       const endpoint = '/channels'
       const res = await axios.post(endpoint, { channel: { name: this.channelName }})
       if (res.data.errors.length > 0) {
-        console.log(res.data.errors)
         this.errors = res.data.errors
       } else {
         this.dialog = false
         location.reload()
       }
-    }
+    },
+    async sendMessage () {
+      this.clearMessage()
+      const endpoint = `/channels/${this.channel.id}/messages`
+      const res = await axios.post(endpoint, { message: { content: this.content }})
+      if (res.data.errors.length > 0) {
+        this.messageErrors = res.data.errors
+      } else {
+        location.reload()
+      }
+    },
+    clearMessage () {
+      this.message = ''
+    },
   }
 }
 </script>
