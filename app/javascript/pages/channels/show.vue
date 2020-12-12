@@ -30,6 +30,13 @@
     <v-main>
       <v-container>
         <h2>{{ channel.name }}</h2>
+        <v-icon
+            large
+            color="green darken-2"
+            @click="toggleOpen"
+        >
+          mdi-account-multiple-plus-outline
+        </v-icon>
         <ul>
           <li
               v-for="message in messages"
@@ -106,20 +113,32 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <SearchUserFormModal
+        v-if="open"
+        :open="open"
+        :channel="channel"
+        :toggle-open="toggleOpen"
+        @onHide="toggleOpen"
+    />
   </v-app>
 </template>
 
 <script>
 import axios from 'axios'
+import SearchUserFormModal from '@/components/user/SearchUserFormModal'
 
 export default {
+  components: {
+    SearchUserFormModal
+  },
   data() {
     return {
       dialog: false,
       channelName: null,
       content: null,
       errors: [],
-      messageErrors: []
+      messageErrors: [],
+      open: false
     }
   },
   props: {
@@ -134,6 +153,9 @@ export default {
     }
   },
   methods: {
+    toggleOpen() {
+      this.open = !this.open
+    },
     openModal() {
       this.dialog = true
     },
