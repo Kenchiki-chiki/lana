@@ -25,18 +25,28 @@
         </v-list>
       </v-menu>
     </v-app>
+    
 </template>
 
 
 
 
 <script>
+import axios from 'axios';
 export default {
+  data() {
+    return {
+      drawer: false
+    }
+  },
   methods: {
-    async logout() {
-      await axios().delete('http://localhost:3000/users/sign_out')
+    logout() {
+      console.log('====1====')
+    
+    this.$router.push({ path: 'http://localhost:3000/users/sign_out' }),
     this.$router.push({ path: 'http://localhost:3000/users/sign_up' })
   },
+  
   
   }
 }
@@ -48,8 +58,8 @@ export default {
 <style>
   .account_icon {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 10px;
+  left: 10px;
 }
 
 

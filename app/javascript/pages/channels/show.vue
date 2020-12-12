@@ -1,31 +1,34 @@
 <template>
   <v-app id="app">
     <profile/>
-    <h2>チャンネル詳細</h2>
-    <v-navigation-drawer>
-      <v-list>
-        <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
-          <a :href="`/channels/${list_channel.id}`">
-            <v-list-item>
-              <v-list-item-title>
-                {{ list_channel.name }}
-              </v-list-item-title>
-            </v-list-item>
-          </a>
-        </v-list-item-group>
-      </v-list>
-      <v-btn
-          class="mx-2"
-          fab
-          dark
-          color="indigo"
-          @click="openModal"
-      >
-        <v-icon dark>
-          mdi-plus
-        </v-icon>
-      </v-btn>
-    </v-navigation-drawer>
+    <div class="sidebar">
+      <h2>チャンネル詳細</h2>
+      <v-navigation-drawer>
+        <v-list>
+          <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
+            <a :href="`/channels/${list_channel.id}`">
+              <v-list-item>
+                <v-list-item-title>
+                  {{ list_channel.name }}
+                </v-list-item-title>
+              </v-list-item>
+            </a>
+          </v-list-item-group>
+        </v-list>
+        <v-btn
+            class="mx-2"
+            fab
+            dark
+            color="indigo"
+            @click="openModal"
+        >
+          <v-icon dark>
+            mdi-plus
+          </v-icon>
+        </v-btn>
+      </v-navigation-drawer>
+    </div>
+    
     <v-dialog
         v-model="dialog"
         persistent
@@ -116,3 +119,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.sidebar {
+  margin: 40px 0 0 30px;
+}
+</style>
