@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+    <profile/>
     <h2>チャンネル詳細</h2>
     <v-navigation-drawer>
       <v-list>
@@ -77,8 +78,11 @@
 
 <script>
 import axios from 'axios'
-
+import Profile from '@/components/profile_icon.vue'
 export default {
+  components: {
+    Profile
+  },
   data() {
     return {
       dialog: false,
