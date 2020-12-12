@@ -29,6 +29,7 @@
     </v-navigation-drawer>
     <v-main>
       <v-container>
+        <profile/>
         <h2>{{ channel.name }}</h2>
         <v-icon
             large
@@ -126,10 +127,12 @@
 <script>
 import axios from 'axios'
 import SearchUserFormModal from '@/components/user/SearchUserFormModal'
+import Profile from '@/components/profile_icon.vue'
 
 export default {
   components: {
-    SearchUserFormModal
+    SearchUserFormModal,
+    Profile
   },
   data() {
     return {
@@ -185,3 +188,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.sidebar {
+  margin: 40px 0 0 30px;
+}
+</style>
