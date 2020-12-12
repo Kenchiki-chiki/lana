@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
     message = @channel.messages.new(message_params)
     message.user = current_user
     if message.save
-      render json: { errors: [] }, status: :created
+      render json: { errors: [], message: message }, status: :created
     else
       render json: { errors: channel.errors.full_messages }, status: :ok
     end
@@ -19,6 +19,6 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:channel).permit(:content)
+    params.require(:message).permit(:content)
   end
 end

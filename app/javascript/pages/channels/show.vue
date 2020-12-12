@@ -1,6 +1,9 @@
 <template>
   <v-app id="app">
-    <v-navigation-drawer>
+    <v-navigation-drawer
+        app
+        clipped
+    >
       <v-list>
         <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
           <a :href="`/channels/${list_channel.id}`">
@@ -24,14 +27,15 @@
         </v-icon>
       </v-btn>
     </v-navigation-drawer>
-    <v-content>
+    <v-main>
       <v-container>
+        <h2>{{ channel.name }}</h2>
         <ul>
           <li
               v-for="message in messages"
               :key="message.id"
           >
-            {{ message }}
+            {{ message.user_name }}：{{ message.content }}
           </li>
         </ul>
         <v-form>
@@ -39,17 +43,14 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                    v-model="message"
-                    :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
-                    :prepend-icon="icon"
+                    v-model="content"
+                    :append-outer-icon="content ? 'mdi-send' : 'mdi-microphone'"
                     filled
                     clear-icon="mdi-close-circle"
                     clearable
                     label="Message"
                     type="text"
-                    @click:append="toggleMarker"
                     @click:append-outer="sendMessage"
-                    @click:prepend="changeIcon"
                     @click:clear="clearMessage"
                 ></v-text-field>
               </v-col>
@@ -57,7 +58,7 @@
           </v-container>
         </v-form>
       </v-container>
-    </v-content>
+    </v-main>
     <v-dialog
         v-model="dialog"
         persistent
@@ -116,19 +117,9 @@ export default {
     return {
       dialog: false,
       channelName: null,
-      message: null,
-      iconIndex: 0,
-      icons: [
-        'mdi-emoticon',
-        'mdi-emoticon-cool',
-        'mdi-emoticon-dead',
-        'mdi-emoticon-excited',
-        'mdi-emoticon-happy',
-        'mdi-emoticon-neutral',
-        'mdi-emoticon-sad',
-        'mdi-emoticon-tongue',
-      ],
-      errors: []
+      content: null,
+      errors: [],
+      messageErrors: []
     }
   },
   props: {
@@ -142,11 +133,6 @@ export default {
       type: Array
     }
   },
-  computed: {
-    icon () {
-      return this.icons[this.iconIndex]
-    },
-  },
   methods: {
     openModal() {
       this.dialog = true
@@ -155,22 +141,24 @@ export default {
       const endpoint = '/channels'
       const res = await axios.post(endpoint, { channel: { name: this.channelName }})
       if (res.data.errors.length > 0) {
-        console.log(res.data.errors)
         this.errors = res.data.errors
       } else {
         this.dialog = false
         location.reload()
       }
     },
-    sendMessage () {
-      this.resetIcon()
+    async sendMessage () {
       this.clearMessage()
+      const endpoint = `/channels/${this.channel.id}/messages`
+      const res = await axios.post(endpoint, { message: { content: this.content }})
+      if (res.data.errors.length > 0) {
+        this.messageErrors = res.data.errors
+      } else {
+        location.reload()
+      }
     },
     clearMessage () {
       this.message = ''
-    },
-    resetIcon () {
-      this.iconIndex = 0
     },
   }
 }

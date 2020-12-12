@@ -14,7 +14,7 @@ class ChannelsController < ApplicationController
 
   def show
     @channels = current_user.channels
-    @messeages = @channel.messages.order(created_at: :desc).limit(50)
+    @messages = @channel.messages.joins(:user).select('users.name as user_name, content, messages.id').order(created_at: :desc).limit(50).to_a.reverse
   end
 
   private
