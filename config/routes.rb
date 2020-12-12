@@ -4,5 +4,5 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
-  resources :channels, only: %i[show]
+  resources :channels, only: %i[create show]
 end
