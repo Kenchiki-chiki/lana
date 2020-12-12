@@ -10,13 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const element = document.querySelector('#app')
     const channels = JSON.parse(element.dataset.channels)
     const channel = JSON.parse(element.dataset.channel)
+    const messages = JSON.parse(element.dataset.messages)
     new Vue({
         vuetify,
         el: '#app',
         render: h => h(ChannelsShow, {
             props: {
                 channels: channels,
-                channel: channel
+                channel: channel,
+                messages: messages
             }
         })
     });

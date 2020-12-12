@@ -1,7 +1,9 @@
 <template>
   <v-app id="app">
-    <h2>チャンネル詳細</h2>
-    <v-navigation-drawer>
+    <v-navigation-drawer
+        app
+        clipped
+    >
       <v-list>
         <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
           <a :href="`/channels/${list_channel.id}`">
@@ -25,6 +27,38 @@
         </v-icon>
       </v-btn>
     </v-navigation-drawer>
+    <v-main>
+      <v-container>
+        <h2>{{ channel.name }}</h2>
+        <ul>
+          <li
+              v-for="message in messages"
+              :key="message.id"
+          >
+            {{ message.user_name }}：{{ message.content }}
+          </li>
+        </ul>
+        <v-form>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                    v-model="content"
+                    :append-outer-icon="content ? 'mdi-send' : 'mdi-microphone'"
+                    filled
+                    clear-icon="mdi-close-circle"
+                    clearable
+                    label="Message"
+                    type="text"
+                    @click:append-outer="sendMessage"
+                    @click:clear="clearMessage"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </v-container>
+    </v-main>
     <v-dialog
         v-model="dialog"
         persistent
@@ -83,7 +117,9 @@ export default {
     return {
       dialog: false,
       channelName: null,
-      errors: []
+      content: null,
+      errors: [],
+      messageErrors: []
     }
   },
   props: {
@@ -92,6 +128,9 @@ export default {
     },
     channel: {
       type: Object
+    },
+    messages: {
+      type: Array
     }
   },
   methods: {
@@ -102,13 +141,25 @@ export default {
       const endpoint = '/channels'
       const res = await axios.post(endpoint, { channel: { name: this.channelName }})
       if (res.data.errors.length > 0) {
-        console.log(res.data.errors)
         this.errors = res.data.errors
       } else {
         this.dialog = false
         location.reload()
       }
-    }
+    },
+    async sendMessage () {
+      this.clearMessage()
+      const endpoint = `/channels/${this.channel.id}/messages`
+      const res = await axios.post(endpoint, { message: { content: this.content }})
+      if (res.data.errors.length > 0) {
+        this.messageErrors = res.data.errors
+      } else {
+        location.reload()
+      }
+    },
+    clearMessage () {
+      this.message = ''
+    },
   }
 }
 </script>
