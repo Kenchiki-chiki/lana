@@ -4,7 +4,10 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
+  resources :users, only: %i[index]
+
   resources :channels, only: %i[create show] do
     resources :messages, only: %i(create)
+    resources :participations, only: %i(create)
   end
 end
