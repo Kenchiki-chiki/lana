@@ -1,4 +1,5 @@
 class ChannelsController < ApplicationController
+  skip_forgery_protection only: %i(create)
   before_action :set_channel, only: %i[show]
 
   def create
@@ -16,10 +17,6 @@ class ChannelsController < ApplicationController
   end
 
   private
-
-  def current_user
-    User.first
-  end
 
   def set_channel
     @channel = Channel.find(params[:id])
