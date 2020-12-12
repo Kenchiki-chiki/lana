@@ -12,11 +12,15 @@
         <v-card-text>
           <ul>
             <li
+                class="mt-5"
                 v-for="user in users"
                 :key="user.id"
             >
               {{user.name}}
               <v-btn
+                  small
+                  color="primary"
+                  class="ml-3"
                   @click="addUserToChannel(user)"
               >
                 追加する
