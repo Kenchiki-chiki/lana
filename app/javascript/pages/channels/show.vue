@@ -1,6 +1,5 @@
 <template>
   <v-app id="app">
-    <h2>チャンネル詳細</h2>
     <v-navigation-drawer>
       <v-list>
         <v-list-item-group v-for="list_channel in channels" :key="list_channel.id">
@@ -25,6 +24,40 @@
         </v-icon>
       </v-btn>
     </v-navigation-drawer>
+    <v-content>
+      <v-container>
+        <ul>
+          <li
+              v-for="message in messages"
+              :key="message.id"
+          >
+            {{ message }}
+          </li>
+        </ul>
+        <v-form>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                    v-model="message"
+                    :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
+                    :prepend-icon="icon"
+                    filled
+                    clear-icon="mdi-close-circle"
+                    clearable
+                    label="Message"
+                    type="text"
+                    @click:append="toggleMarker"
+                    @click:append-outer="sendMessage"
+                    @click:prepend="changeIcon"
+                    @click:clear="clearMessage"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </v-container>
+    </v-content>
     <v-dialog
         v-model="dialog"
         persistent
@@ -83,6 +116,18 @@ export default {
     return {
       dialog: false,
       channelName: null,
+      message: null,
+      iconIndex: 0,
+      icons: [
+        'mdi-emoticon',
+        'mdi-emoticon-cool',
+        'mdi-emoticon-dead',
+        'mdi-emoticon-excited',
+        'mdi-emoticon-happy',
+        'mdi-emoticon-neutral',
+        'mdi-emoticon-sad',
+        'mdi-emoticon-tongue',
+      ],
       errors: []
     }
   },
@@ -92,7 +137,15 @@ export default {
     },
     channel: {
       type: Object
+    },
+    messages: {
+      type: Array
     }
+  },
+  computed: {
+    icon () {
+      return this.icons[this.iconIndex]
+    },
   },
   methods: {
     openModal() {
@@ -108,7 +161,17 @@ export default {
         this.dialog = false
         location.reload()
       }
-    }
+    },
+    sendMessage () {
+      this.resetIcon()
+      this.clearMessage()
+    },
+    clearMessage () {
+      this.message = ''
+    },
+    resetIcon () {
+      this.iconIndex = 0
+    },
   }
 }
 </script>

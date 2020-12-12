@@ -14,6 +14,7 @@ class ChannelsController < ApplicationController
 
   def show
     @channels = current_user.channels
+    @messeages = @channel.messages.order(created_at: :desc).limit(50)
   end
 
   private
