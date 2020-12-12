@@ -32,7 +32,7 @@
         <h2>{{ channel.name }}</h2>
         <v-icon
             large
-            color="green darken-2"
+            color="blue darken-2"
             @click="toggleOpen"
         >
           mdi-account-multiple-plus-outline

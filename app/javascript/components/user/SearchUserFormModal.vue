@@ -10,23 +10,34 @@
           ユーザをチャンネルに追加する
         </v-card-title>
         <v-card-text>
-          <ul>
-            <li
-                class="mt-5"
-                v-for="user in users"
-                :key="user.id"
-            >
-              {{user.name}}
-              <v-btn
-                  small
-                  color="primary"
-                  class="ml-3"
-                  @click="addUserToChannel(user)"
+          <v-text-field
+              v-model="name"
+              :counter="10"
+              label="ユーザ名で検索"
+              @input="searchUsers"
+          ></v-text-field>
+          <div v-if="users.length > 0">
+            <ul>
+              <li
+                  class="mt-5"
+                  v-for="user in users"
+                  :key="user.id"
               >
-                追加する
-              </v-btn>
-            </li>
-          </ul>
+                {{user.name}}
+                <v-btn
+                    small
+                    color="primary"
+                    class="ml-3"
+                    @click="addUserToChannel(user)"
+                >
+                  追加する
+                </v-btn>
+              </li>
+            </ul>
+          </div>
+          <div v-else>
+            <p>ユーザは見つかりませんでした</p>
+          </div>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -63,13 +74,13 @@ export default {
   },
   data() {
     return {
-      users: []
+      users: [],
+      name: ''
     }
   },
   async created() {
-    const res = await axios.get('/users')
+    const res = await axios.get('/users', { params: { channel_id: this.channel.id}})
     this.users = res.data
-    // TODO: すでにチャンネルに入っているユーザは除外したい
   },
   methods: {
     async addUserToChannel(user) {
@@ -81,6 +92,10 @@ export default {
         location.reload()
         alert(`${user.name}さんをチャンネルに追加しました`)
       }
+    },
+    async searchUsers() {
+      const res = await axios.get('/users', { params: { channel_id: this.channel.id, name: this.name}})
+      this.users = res.data
     }
   }
 }
